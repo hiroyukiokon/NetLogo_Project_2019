@@ -651,6 +651,19 @@ NetLogo 6.0.3
       <value value="2"/>
     </enumeratedValueSet>
   </experiment>
+  <experiment name="Effect_of_blue_fertility_om_red_extinction" repetitions="10" runMetricsEveryStep="false">
+    <setup>setup</setup>
+    <go>go</go>
+    <exitCondition>red-count = 0</exitCondition>
+    <metric>ticks</metric>
+    <enumeratedValueSet variable="carrying-capacity">
+      <value value="1000"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="red-fertility">
+      <value value="2"/>
+    </enumeratedValueSet>
+    <steppedValueSet variable="blue-fertility" first="2.1" step="0.1" last="5"/>
+  </experiment>
 </experiments>
 @#$#@#$#@
 @#$#@#$#@
