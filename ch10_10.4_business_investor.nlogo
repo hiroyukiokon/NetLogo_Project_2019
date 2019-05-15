@@ -1,14 +1,13 @@
-globals [ number-of-investors T ] ;; F is the annual risk of failing business
-                                    ;; and losing all wealth
-                                    ;; F is probability per year between 0.0 and 1.0
-                                    ;; T is investor's time horizon to the future
+globals [ number-of-investors T ]   ;; T is investor's time horizon to the future
                                     ;; to be set 5 years
 
 turtles-own [ W ] ;; W represents current wealth in money units
                   ;; W is used by both turtles and patches
 
 patches-own [ P F ] ;; P represents the annual net profit in money units
-
+                    ;; F is the annual risk of failing business
+                    ;; and losing all wealth
+                    ;; F is probability per year between 0.01 and 0.1
 
 ;; The model time step is one year
 ;; and simulations run for 25 years, that is, until tick = 25
@@ -19,15 +18,24 @@ to setup
  clear-all
 
  set number-of-investors 100   ;; global parameter
+ set T 5
 
  create-turtles number-of-investors
   [
     set W 0
     set shape "person"
     setxy random-pxcor random-pycor
+
+    ; investors cannot be placed in a patch already occupaied by another investor.
+    while [any? other turtles-here]
+      [move-to one-of neighbors]
+
+
+
+
   ]
 
-;; open an output fie for testing and analysis
+;; open an output file for testing and analysis
 ;; first, delete it instead of appending to it
  if (file-exists? "ch10_Business_Investor_Output.csv")
    [
@@ -84,6 +92,7 @@ to investor-repositioning ; a turtle procedure for investment actions
 
 
   ; identyfy the best one of the destinations, the best investment oppotunity
+  ; "myself" is a turtle who called "utility-for" reportor and asked patches to do commands
   let best-patch max-one-of potential-destinations [utility-for myself]
 
   ; now move there
@@ -106,12 +115,14 @@ to-report utility-for [a-turtle] ; this is in a patch context.
 end
 
 to accounting ; a turtle procedure to update wealtha state variable, W
+
    set W (W + P)
 
    if random-float 1.0 < F
      [set W 0]
 
 end
+
 
 to update-outputs
   ; write turtle states to output file
@@ -129,17 +140,15 @@ to update-outputs
   file-close
 
 end
-
-
 @#$#@#$#@
 GRAPHICS-WINDOW
-446
-12
-890
-457
+537
+31
+1039
+534
 -1
 -1
-21.8
+24.7
 1
 10
 1
@@ -268,7 +277,9 @@ PENS
 @#$#@#$#@
 ## WHAT IS IT?
 
-This is an example model of information acquisiton, or sensing. that is about what information agents have and how they obtain it.
+
+
+This is an example model of information acquisiton, or sensing. that is about what information agents have and, how and where they obtain it.
 
 
 ## HOW IT WORKS
