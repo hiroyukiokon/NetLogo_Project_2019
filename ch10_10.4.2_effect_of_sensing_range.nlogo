@@ -19,13 +19,19 @@ to setup
  clear-all
 
  set number-of-investors 100   ;; global parameter
- ;set sensing-radius 2
+ set T 5                       ;; T is investor's time horizon to the future
+                               ;; to be set 5 years
+
+
+ set sensing-radius 2
 
  create-turtles number-of-investors
   [
     set W 0
     set shape "person"
     setxy random-pxcor random-pycor
+    while [any? other turtles-here]
+      [move-to one-of neighbors]
   ]
 
 ;; open an output fie for testing and analysis
@@ -87,8 +93,8 @@ to investor-repositioning ; a turtle procedure for investment actions
   ;The current patch is in the sensing-radius but must be excluded beause it contains a turtle.
   let potential-destinations patches in-radius sensing-radius with [ not any? turtles-here ]
 
-  ; Now add our current patch to the potential-destinations
-  set potential-destinations ( patch-set potential-destinations patch-here)
+  ; Now add the current patch to the potential-destinations
+  set potential-destinations (patch-set potential-destinations patch-here)
 
 
   ; identyfy the best one of the destinations, the best investment oppotunity
@@ -137,7 +143,6 @@ to update-outputs
   file-close
 
 end
-
 @#$#@#$#@
 GRAPHICS-WINDOW
 446
@@ -623,8 +628,7 @@ NetLogo 6.0.3
   <experiment name="Effect of Sensing range" repetitions="10" runMetricsEveryStep="true">
     <setup>setup</setup>
     <go>go</go>
-    <timeLimit steps="25"/>
-    <exitCondition>ticks = 25</exitCondition>
+    <exitCondition>ticks &gt;= 25</exitCondition>
     <metric>mean [W] of turtles</metric>
     <steppedValueSet variable="sensing-radius" first="0" step="1" last="10"/>
   </experiment>
